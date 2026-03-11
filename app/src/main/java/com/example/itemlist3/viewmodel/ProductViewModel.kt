@@ -10,25 +10,29 @@ class ProductViewModel : ViewModel() {
 
     private val repository = ProductRepository()
 
-    private val _state = MutableLiveData<UiState<List<Product>>>()
+    private val _state =
+        MutableLiveData<UiState<List<Product>>>()
 
     val state: LiveData<UiState<List<Product>>> = _state
 
-    fun loadProducts(){
+    fun loadProducts() {
 
         viewModelScope.launch {
 
             _state.value = UiState.Loading
 
-            try{
+            try {
 
-                val products = repository.getProducts()
+                val products =
+                    repository.getProducts()
 
-                _state.value = UiState.Success(products)
+                _state.value =
+                    UiState.Success(products)
 
-            }catch(e:Exception){
+            } catch (e: Exception) {
 
-                _state.value = UiState.Error("Failed to load products")
+                _state.value =
+                    UiState.Error("No Internet Connection")
 
             }
         }

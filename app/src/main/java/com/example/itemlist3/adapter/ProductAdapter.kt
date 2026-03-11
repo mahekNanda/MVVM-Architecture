@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.itemlist3.databinding.ItemProductBinding
 import com.example.itemlist3.model.Product
 
@@ -31,8 +32,10 @@ class ProductAdapter(
 
         holder.binding.productName.text=product.name
         holder.binding.productPrice.text=product.price
-        holder.binding.productImage.setImageResource(product.image)
 
+        Glide.with(holder.itemView.context)
+            .load(product.image)
+            .into(holder.binding.productImage)
         holder.itemView.setOnClickListener{
             onClick(product)
         }

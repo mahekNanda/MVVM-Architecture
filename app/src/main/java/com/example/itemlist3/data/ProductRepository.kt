@@ -1,40 +1,23 @@
 package com.example.itemlist3.data
 
-import com.example.itemlist3.R
 import com.example.itemlist3.model.Product
-import kotlinx.coroutines.delay
+import com.example.itemlist3.network.RetrofitInstance
 
 class ProductRepository {
 
-    suspend fun getProducts():List<Product>{
+    suspend fun getProducts(): List<Product> {
 
-        delay(2000) // simulate API delay
+        val response =
+            RetrofitInstance.api.getProducts()
 
-        return listOf(
+        if (response.isSuccessful) {
 
-            Product(
-                1,
-                "Laptop",
-                "₹80,000",
-                R.drawable.laptop,
-                "High performance laptop"
-            ),
+            return response.body() ?: emptyList()
 
-            Product(
-                2,
-                "Mobile",
-                "₹25,000",
-                R.drawable.mobile,
-                "Latest smartphone"
-            ),
+        } else {
 
-            Product(
-                3,
-                "Headphones",
-                "₹2,000",
-                R.drawable.headphone,
-                "Wireless headphones"
-            )
-        )
+            throw Exception("API Error")
+
+        }
     }
 }
