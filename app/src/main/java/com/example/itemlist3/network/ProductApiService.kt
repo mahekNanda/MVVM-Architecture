@@ -8,5 +8,4 @@ interface ProductApiService {
 
     @GET("products")
     suspend fun getProducts(): Response<List<Product>>
-
 }

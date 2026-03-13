@@ -1,4 +1,4 @@
-    package com.example.itemlist3.adapter
+package com.example.itemlist3.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,15 +9,15 @@ import com.example.itemlist3.databinding.ItemProductBinding
 import com.example.itemlist3.model.Product
 
 class ProductAdapter(
-    private val onClick:(Product)->Unit
-):ListAdapter<Product,ProductAdapter.ProductViewHolder>(ProductDiffUtil()){
+    private val onClick: (Product) -> Unit
+) : ListAdapter<Product, ProductAdapter.ProductViewHolder>(ProductDiffUtil()) {
 
-    inner class ProductViewHolder(val binding:ItemProductBinding)
-        :RecyclerView.ViewHolder(binding.root)
+    inner class ProductViewHolder(val binding: ItemProductBinding)
+        : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
 
-        val binding=ItemProductBinding.inflate(
+        val binding = ItemProductBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -28,15 +28,16 @@ class ProductAdapter(
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
 
-        val product=getItem(position)
+        val product = getItem(position)
 
-        holder.binding.productName.text=product.name
-        holder.binding.productPrice.text=product.price
+        holder.binding.productName.text = product.title
+        holder.binding.productPrice.text = "₹${product.price}"
 
         Glide.with(holder.itemView.context)
             .load(product.image)
             .into(holder.binding.productImage)
-        holder.itemView.setOnClickListener{
+
+        holder.itemView.setOnClickListener {
             onClick(product)
         }
     }

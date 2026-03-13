@@ -1,10 +1,12 @@
 package com.example.itemlist3.model
 
-sealed class UiState<out T> {
+import android.os.Message
+import androidx.lifecycle.LiveData
 
-    object Loading : UiState<Nothing>()
+sealed class UiState {
 
-    data class Success<T>(val data:T) : UiState<T>()
+    object Loading : UiState()
+    data class Success(val data: List<Product>): UiState()
+    data class Error(val message: String): UiState()
 
-    data class Error(val message:String) : UiState<Nothing>()
 }

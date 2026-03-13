@@ -2,7 +2,6 @@ package com.example.itemlist3.viewmodel
 
 import androidx.lifecycle.*
 import com.example.itemlist3.data.ProductRepository
-import com.example.itemlist3.model.Product
 import com.example.itemlist3.model.UiState
 import kotlinx.coroutines.launch
 
@@ -10,10 +9,8 @@ class ProductViewModel : ViewModel() {
 
     private val repository = ProductRepository()
 
-    private val _state =
-        MutableLiveData<UiState<List<Product>>>()
-
-    val state: LiveData<UiState<List<Product>>> = _state
+    private val _state = MutableLiveData<UiState>()
+    val state: LiveData<UiState> = _state
 
     fun loadProducts() {
 
@@ -23,16 +20,14 @@ class ProductViewModel : ViewModel() {
 
             try {
 
-                val products =
-                    repository.getProducts()
+                val products = repository.getProducts()
 
-                _state.value =
-                    UiState.Success(products)
+                _state.value = UiState.Success(products)
 
             } catch (e: Exception) {
 
                 _state.value =
-                    UiState.Error("No Internet Connection")
+                    UiState.Error(e.message ?: "Unknown Error")
 
             }
         }

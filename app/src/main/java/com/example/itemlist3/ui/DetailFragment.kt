@@ -1,26 +1,51 @@
 package com.example.itemlist3.ui
 
 import android.os.Bundle
-import android.view.View
+import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.itemlist3.R
+import com.bumptech.glide.Glide
 import com.example.itemlist3.databinding.FragmentDetailBinding
 
+class DetailFragment : Fragment() {
 
-class DetailFragment:Fragment(R.layout.fragment_detail){
+    private var _binding: FragmentDetailBinding? = null
+    private val binding get() = _binding!!
 
-    private lateinit var binding:FragmentDetailBinding
+    private val args: DetailFragmentArgs by navArgs()
 
-    private val args:DetailFragmentArgs by navArgs()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        _binding = FragmentDetailBinding.inflate(inflater, container, false)
 
-        binding=FragmentDetailBinding.bind(view)
+        binding.productName.text = args.title
+        binding.productPrice.text = "₹${args.price}"
+        binding.productDescription.text = args.description
 
-        val productId=args.productId
+        Glide.with(requireContext())
+            .load(args.image)
+            .into(binding.productImage)
 
-        binding.productName.text="Product ID: $productId"
+        binding.btnBack.setOnClickListener {
 
+            findNavController().navigateUp()
+        }
+
+        binding.btnAddToCart.setOnClickListener {
+
+            Toast.makeText(
+                requireContext(),
+                "Added to Cart",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        return binding.root
     }
 }

@@ -7,17 +7,12 @@ class ProductRepository {
 
     suspend fun getProducts(): List<Product> {
 
-        val response =
-            RetrofitInstance.api.getProducts()
+        val response = RetrofitInstance.api.getProducts()
 
         if (response.isSuccessful) {
-
             return response.body() ?: emptyList()
-
         } else {
-
-            throw Exception("API Error")
-
+            throw Exception("API Error: ${response.code()}")
         }
     }
 }
