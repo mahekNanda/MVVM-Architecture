@@ -3,11 +3,14 @@ package com.example.itemlist3.viewmodel
 import androidx.lifecycle.*
 import com.example.itemlist3.data.ProductRepository
 import com.example.itemlist3.model.UiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProductViewModel : ViewModel() {
-
-    private val repository = ProductRepository()
+@HiltViewModel
+class ProductViewModel @Inject constructor(
+    private val repository: ProductRepository
+) : ViewModel() {
 
     private val _state = MutableLiveData<UiState>()
     val state: LiveData<UiState> = _state
@@ -20,15 +23,15 @@ class ProductViewModel : ViewModel() {
 
             try {
 
-                val products = repository.getProducts()
+                val response = repository.getProducts()
 
-                _state.value = UiState.Success(products)
+                _state.value =
+                    UiState.Success(response.body() ?: emptyList())
 
             } catch (e: Exception) {
 
                 _state.value =
-                    UiState.Error(e.message ?: "Unknown Error")
-
+                    UiState.Error(e.message ?: "Unknown error")
             }
         }
     }

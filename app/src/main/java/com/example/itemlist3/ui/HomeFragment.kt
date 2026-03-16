@@ -11,7 +11,9 @@ import com.example.itemlist3.adapter.ProductAdapter
 import com.example.itemlist3.databinding.FragmentHomeBinding
 import com.example.itemlist3.model.UiState
 import com.example.itemlist3.viewmodel.ProductViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
