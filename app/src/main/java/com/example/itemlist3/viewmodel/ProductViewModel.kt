@@ -31,7 +31,7 @@ class ProductViewModel @Inject constructor(
             } catch (e: Exception) {
 
                 _state.value =
-                    UiState.Error(e.message ?: "Unknown error")
+                    UiState.Error("Failed to load products")
             }
         }
     }
