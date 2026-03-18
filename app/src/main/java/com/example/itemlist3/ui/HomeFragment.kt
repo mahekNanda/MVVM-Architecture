@@ -38,7 +38,7 @@ class HomeFragment : Fragment() {
 
 //        observeState()
 
-        viewModel.loadProducts()
+        viewModel.refresh()
 
         return binding.root
     }

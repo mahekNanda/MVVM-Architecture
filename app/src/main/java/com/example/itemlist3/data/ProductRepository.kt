@@ -11,30 +11,36 @@ class ProductRepository @Inject constructor(
     private val dao: ProductDao
 ) {
 
-    fun getCachedProducts(): Flow<List<ProductEntity>> {
+     fun getProducts(): Flow<List<ProductEntity>> {
         return dao.getProducts()
     }
 
-    suspend fun fetchProducts() {
+     suspend fun refreshProducts() {
 
-        val response = api.getProducts()
+        try {
 
-        if (response.isSuccessful) {
+            val response = api.getProducts()
 
-            val products = response.body() ?: emptyList()
+            if (response.isSuccessful) {
 
-            val entities = products.map {
-                ProductEntity(
-                    id = it.id,
-                    title = it.title,
-                    price = it.price,
-                    description = it.description,
-                    image = it.image
-                )
+                val products = response.body() ?: emptyList()
+
+                val entities = products.map {
+
+                    ProductEntity(
+                        id = it.id,
+                        title = it.title,
+                        price = it.price,
+                        description = it.description,
+                        image = it.image
+                    )
+                }
+
+                dao.clearProducts()
+                dao.insertProducts(entities)
             }
 
-            dao.clearProducts()
-            dao.insertProducts(entities)
-        }
+        } catch (e: Exception) {
+         }
     }
 }

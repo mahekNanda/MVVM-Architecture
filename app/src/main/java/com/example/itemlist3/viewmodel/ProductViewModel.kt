@@ -1,9 +1,8 @@
 package com.example.itemlist3.viewmodel
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.itemlist3.data.ProductRepository
+import com.example.itemlist3.entity.ProductEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,19 +12,17 @@ class ProductViewModel @Inject constructor(
     private val repository: ProductRepository
 ) : ViewModel() {
 
-    val products = repository
-        .getCachedProducts()
-        .asLiveData()
+    // 🔥 Always observe Room
+    val products: LiveData<List<ProductEntity>> =
+        repository.getProducts().asLiveData()
 
-    fun loadProducts() {
+    init {
+        refresh()
+    }
 
+    fun refresh() {
         viewModelScope.launch {
-
-            try {
-                repository.fetchProducts()
-            } catch (e: Exception) {
-                // offline fallback
-            }
+            repository.refreshProducts()
         }
     }
 }
