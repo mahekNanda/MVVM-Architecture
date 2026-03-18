@@ -1,5 +1,6 @@
 package com.example.itemlist3.di
 
+import com.example.itemlist3.dao.ProductDao
 import com.example.itemlist3.data.ProductRepository
 import com.example.itemlist3.network.ProductApiService
 import dagger.Module
@@ -15,9 +16,10 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideRepository(
-        api: ProductApiService
+        api: ProductApiService,
+        dao: ProductDao
     ): ProductRepository {
 
-        return ProductRepository(api)
+        return ProductRepository(api, dao)
     }
 }

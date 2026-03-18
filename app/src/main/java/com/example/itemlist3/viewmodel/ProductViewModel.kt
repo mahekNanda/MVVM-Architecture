@@ -1,8 +1,9 @@
 package com.example.itemlist3.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.itemlist3.data.ProductRepository
-import com.example.itemlist3.model.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -12,26 +13,18 @@ class ProductViewModel @Inject constructor(
     private val repository: ProductRepository
 ) : ViewModel() {
 
-    private val _state = MutableLiveData<UiState>()
-    val state: LiveData<UiState> = _state
+    val products = repository
+        .getCachedProducts()
+        .asLiveData()
 
     fun loadProducts() {
 
         viewModelScope.launch {
 
-            _state.value = UiState.Loading
-
             try {
-
-                val response = repository.getProducts()
-
-                _state.value =
-                    UiState.Success(response.body() ?: emptyList())
-
+                repository.fetchProducts()
             } catch (e: Exception) {
-
-                _state.value =
-                    UiState.Error("Failed to load products")
+                // offline fallback
             }
         }
     }

@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.itemlist3.adapter.ProductAdapter
 import com.example.itemlist3.databinding.FragmentHomeBinding
+import com.example.itemlist3.model.Product
 import com.example.itemlist3.model.UiState
 import com.example.itemlist3.viewmodel.ProductViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +32,19 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        setupRecyclerView()
+
+        observeProducts()
+
+//        observeState()
+
+        viewModel.loadProducts()
+
+        return binding.root
+    }
+
+    private fun setupRecyclerView() {
+
         adapter = ProductAdapter { product ->
 
             val action =
@@ -50,44 +64,62 @@ class HomeFragment : Fragment() {
             LinearLayoutManager(requireContext())
 
         binding.recyclerView.adapter = adapter
-
-        observeData()
-
-        viewModel.loadProducts()
-
-        return binding.root
     }
 
-    private fun observeData() {
 
-        viewModel.state.observe(viewLifecycleOwner) { state ->
+    private fun observeProducts() {
 
-            when (state) {
+        viewModel.products.observe(viewLifecycleOwner) { products ->
 
-                is UiState.Loading -> {
+            // 🔴 STOP LOADING HERE
+            binding.progressBar.visibility = View.GONE
 
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-
-                is UiState.Success -> {
-
-                    binding.progressBar.visibility = View.GONE
-                    adapter.submitList(state.data)
-                }
-
-                is UiState.Error -> {
-
-                    binding.progressBar.visibility = View.GONE
-
-                    Toast.makeText(
-                        requireContext(),
-                        state.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            if (products.isEmpty()) {
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                adapter.submitList(products.map {
+                    Product(
+                        id = it.id,
+                        title = it.title,
+                        price = it.price,
+                        description = it.description,
+                        image = it.image
+                    )
+                })
             }
         }
     }
+
+
+//    private fun observeState() {
+//
+//        viewModel.state.observe(viewLifecycleOwner) { state ->
+//
+//            when (state) {
+//
+//                is UiState.Loading -> {
+//
+//                    binding.progressBar.visibility = View.VISIBLE
+//                }
+//
+//                is UiState.Success -> {
+//
+//                    binding.progressBar.visibility = View.GONE
+//                }
+//
+//                is UiState.Error -> {
+//
+//                    binding.progressBar.visibility = View.GONE
+//
+//                    Toast.makeText(
+//                        requireContext(),
+//                        state.message,
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            }
+//        }
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
