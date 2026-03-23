@@ -1,7 +1,6 @@
-package com.example.itemlist3.model
+package com.example.itemlist3.viewmodel
 
-import android.os.Message
-import androidx.lifecycle.LiveData
+import com.example.itemlist3.model.Product
 
 sealed class UiState {
 
